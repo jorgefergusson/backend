@@ -4,9 +4,12 @@ const express = require("express");
 const { default: mongoose } = require("mongoose");
 const app = express();
 const moongoose = require("mongoose");
-var routes = require('./routes/routes');
+var routes = require("./routes/routes");
+const cors = require("cors");
 
 //start server
+
+app.use(cors({ origin: "http://localhost:4200" }));
 
 app.listen(4000, function check(error) {
   if (error) {
@@ -29,7 +32,6 @@ mongoose.connect(
     }
   }
 );
-
 
 app.use(express.json());
 app.use(routes);

@@ -1,15 +1,15 @@
 var userModel = require("./userModel");
-var key = "ASDFGTREWQQzxcvfdsa";
+var key = "mystudentsaretalented";
 var encryptor = require("simple-encryptor")(key);
 
 module.exports.saveUserInfoService = (userDetails) => {
-  return new Promise(function saveUserInfo(resolve, reject) {
+  return new Promise(function saveUserInfoFun(resolve, reject) {
     var userModelData = new userModel();
     userModelData.username = userDetails.username;
     userModelData.email = userDetails.email;
-    //encrypt the password
+    //Code to encrypt password
     var encryptedPassword = encryptor.encrypt(userDetails.password);
-    userModelData.password = userDetails.password;
+    userModelData.password = encryptedPassword;
 
     userModelData.save(function resultHandle(error, result) {
       if (error) {
@@ -27,21 +27,20 @@ module.exports.userLoginService = (userLoginDetails) => {
       { email: userLoginDetails.email },
       function getLoginResult(error, result) {
         if (error) {
-          reject({ status: false, message: "Invalid data" });
+          reject({ status: false, message: "Invalid Data" });
         } else {
           if (result != undefined && result != null) {
             var decryptedPassword = encryptor.decrypt(result.password);
             if (decryptedPassword == userLoginDetails.password) {
-              resolve({
-                status: true,
-                message: "User Validation successfully",
-              });
+              resolve({ status: true, message: "User validated Successfully" });
+            } else {
+              reject({ status: false, message: "User validation failed" });
             }
           } else {
-            reject({ status: false, message: "error in User Information" });
+            reject({ status: false, message: "Error in User Information" });
           }
         }
       }
     );
   });
-}
+};
